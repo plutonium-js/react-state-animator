@@ -1,0 +1,33 @@
+{
+	"name": "plutonium-js",
+	"version": "1.0.0",
+	"description": "Plutonium is a lightweight animation library for React or vanilla JavaScript.",
+	"main": "lib/plutonium.js",
+	"module": "lib/plutonium.esm.js",
+	"unpkg": "lib/plutonium.min.js",
+	"jsnext:main": "lib/plutonium.esm.js",
+	"scripts": {
+		"build": "node build"
+	},
+	"keywords": [
+		"plutonium",
+		"animation",
+		"animate",
+		"transition",
+		"key frames",
+		"react",
+		"reactJS",
+		"svg",
+		"morph",
+		"morphing",
+		"path morph",
+		"tween",
+		"tweening",
+		"greensock"
+	],
+	"author": "Jesse Dalessio",
+	"license": "MIT",
+	"devDependencies": {
+		"uglify-es": "^3.3.9"
+	}
+}
