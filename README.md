@@ -47,7 +47,7 @@ morph plugin | 6K | 3K
 * [License](#License)
 
 
-### <a id="Installation">Installation</a>
+### <a id="Installation"></a>Installation
 ```
 > npm install plutonium-js
 ```
