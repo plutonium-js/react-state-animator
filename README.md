@@ -55,7 +55,9 @@ morph plugin | 6K | 3K
 **[:arrow_up_small:](#bookmarks)**	
 
 ### <a id="Usage" style="color:yellow;"></a>Usage
-* #### <a id="Module"></a>Module
+
+* <a id="Module"></a>**Module**
+   
    In ES6 the code example below imports the core Plutonium animation module plus the SVG morph plugin.
    ```javascript
    import Plutonium, {morph} from 'plutonium-js';
@@ -65,7 +67,9 @@ morph plugin | 6K | 3K
    const Plutonium = require('plutonium-js').plutonium;
    const morph = require('plutonium-js').morph;
    ```
-* #### <a id="Script-Tags"></a>Script Tags
+   
+* <a id="Script-Tags"></a>**Script Tags**
+   
    Add the core Plutonium library and optional plugin scripts directly to a web page. 
    ```javascript
    <script src="lib/min/plutonium.js"></script>
@@ -401,6 +405,7 @@ myAnim.changeDirection();
 **[:arrow_up_small:](#bookmarks)**
    
 * **<a id="animation-properties"></a>animation properties:** The following are valid animation properties and values.
+   
    * **duration:** [use a number for milliseconds, or a string with units. for example '1s' or '1000ms']
    * **timing:** ['linear', 'ease', 'quadratic', 'cubic', 'quartic', 'quintic', 'sinusoidal', 'exponential', 'circular', 'elastic', 'back', 'bounce' *(optionally specify timing direction by appending '-in', '-out', or '-inout' to the name)*]
    * **delay:** [use a number for milliseconds, or a string with units. for example '1s' or '1000ms']
@@ -412,6 +417,7 @@ myAnim.changeDirection();
 **[:arrow_up_small:](#bookmarks)**  
 
 * **<a id="addListener"></a>addListener():** Listen for animation instance events.
+   
    * **'frameChange':** triggered when a frame is rendered
    * **'end':** triggered when the animation ends
    * **'iterate':** triggered when the animation iterates / loops
@@ -446,6 +452,7 @@ myAnim.changeDirection();
 **[:arrow_up_small:](#bookmarks)**
 
 * **<a id="event-properties"></a>event properties:** The following are event properties passed to the listener function.
+   
    * **type:** the event type name, for example 'frameChange', 'end', etc...
    * **target:** the object that fired the event, for example an animation instance
    * **frame:** if applicable the event will include a frame object with additional animation properties
@@ -453,6 +460,7 @@ myAnim.changeDirection();
 **[:arrow_up_small:](#bookmarks)**
    
 * **<a id="frame-properties"></a>frame properties:** The following are frame properties which are added to the event object for most animation events.
+   
    * animation: the animation instance that the frame belongs to
    * data: additional data about the frame
       * **pos:** the position of the frame between 0% and 100%
