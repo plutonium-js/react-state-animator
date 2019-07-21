@@ -1,7 +1,7 @@
 {
-	"name": "plutonium-js",
+	"name": "react-state-animator",
 	"version": "1.0.0",
-	"description": "Plutonium is a lightweight animation library for React or vanilla JavaScript.",
+	"description": "Plutonium is an ultra lightweight full featured animation library built specifically for React and vanilla JavaScript. Tween any React component state properties or DOM styles and attributes. An advanced normalizing SVG morphing plugin for paths is included!",
 	"main": "lib/plutonium.js",
 	"module": "lib/plutonium.esm.js",
 	"unpkg": "lib/plutonium.min.js",

@@ -784,7 +784,7 @@ export default function(plugins) {
 						let applyAs = (valData.tween||{}).applyAs;
 						let iVal = valData.iVal = applyAs==='attribute'?obj.getAttributeNS(null,i):obj.style[i];
 						//if an initial val 'iVal' was not found set the value to the first key and change all numbers to 0
-						let firstKeyVal; if (iVal===null && (firstKeyVal=valData.keys[Object.keys(valData.keys)[0]])!==null) {
+						let firstKeyVal; if ((iVal===null||iVal==="") && (firstKeyVal=valData.keys[Object.keys(valData.keys)[0]])!==null) {
 							if (typeof firstKeyVal=="string") {
 								firstKeyVal = firstKeyVal.replace(regex_1,"0");
 							}

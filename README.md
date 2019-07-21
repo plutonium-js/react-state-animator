@@ -1,8 +1,8 @@
-# Plutonium-JS
+# Plutonium react-state-animator
 ### Ultra lightweight React / JavaScript Animation Library
-Plutonium is a lightweight full featured animation library built specifically for React and vanilla JavaScript. Tween any React state properties or DOM styles and attributes. An advanced normalizing SVG morphing plugin for paths is included!
+Plutonium is an ultra lightweight full featured animation library built specifically for React and vanilla JavaScript. Tween any React component state properties or DOM styles and attributes. An advanced normalizing SVG morphing plugin for paths is included!
 
-Gain precision control over your animations with custom event listeneers and an advanced API that includes pausing, seeking, repeating, direction change, delays, duration, fill modes, and much more.
+Gain precision control over your animations with custom event listeners and an advanced API that includes pausing, seeking, repeating, direction change, delays, duration, fill modes, and much more.
 
 Animations work in all modern browsers including Edge, plus many older browsers.
 
@@ -49,7 +49,7 @@ morph plugin | 6K | 3K
 
 ### <a id="Installation"></a>Installation
 ```
-> npm install plutonium-js
+> npm install react-state-animator
 ```
 
 **[:arrow_up_small:](#bookmarks)**	
@@ -60,12 +60,12 @@ morph plugin | 6K | 3K
    
    In ES6 the code example below imports the core Plutonium animation module plus the SVG morph plugin.
    ```javascript
-   import Plutonium, {morph} from 'plutonium-js';
+   import Plutonium, {morph} from 'react-state-animator';
    ```
    Or when using CommonJS...
    ```javascript
-   const Plutonium = require('plutonium-js').plutonium;
-   const morph = require('plutonium-js').morph;
+   const Plutonium = require('react-state-animator').plutonium;
+   const morph = require('react-state-animator').morph;
    ```
    
 * <a id="Script-Tags"></a>**Script Tags**
@@ -426,17 +426,17 @@ myAnim.changeDirection();
    * **'stop':** triggered when the animation is stopped
    * **'reset':** triggered when the animation is reset
    ```javascript
-   //example 1: listen for 'frameChange' event and show frame data in the console
+   //example 1: listen for the 'frameChange' event and show frame data in the console
    myAnim.addListener("frameChange", evt => {
        console.log(JSON.stringify(evt.frame.data));
    });
    
-   //example 2: listen for 'iterate' (loop) event and show the iteration count in the console
+   //example 2: listen for the 'iterate' (loop) event and show the iteration count in the console
    myAnim.addListener("iterate", evt => {
        console.log(evt.frame.data.iterationCount);
    });
    
-   //example 3: listen for 'end' (loop) event and show a message in the console
+   //example 3: listen for the 'end' (loop) event and show a message in the console
    myAnim.addListener("end", evt => {
        console.log('the animation ended');
    });
