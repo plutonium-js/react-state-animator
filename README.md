@@ -1,4 +1,4 @@
-# Plutonium react-state-animator
+# Plutonium [react-state-animator]
 ### Ultra lightweight React / JavaScript Animation Library
 Plutonium is an ultra lightweight full featured animation library built specifically for React and vanilla JavaScript. Tween any React component state properties or DOM styles and attributes. An advanced normalizing SVG morphing plugin for paths is included!
 
