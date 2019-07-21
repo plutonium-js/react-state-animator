@@ -54,8 +54,8 @@ morph plugin | 6K | 3K
 
 **[:arrow_up_small:](#bookmarks)**	
 
-### <a id="Usage">Usage</a>
-* ####  <a id="Module">Module</a>
+### <a id="Usage" style="color:yellow;"></a>Usage
+* #### <a id="Module"></a>Module
    In ES6 the code example below imports the core Plutonium animation module plus the SVG morph plugin.
    ```javascript
    import Plutonium, {morph} from 'plutonium-js';
@@ -65,7 +65,7 @@ morph plugin | 6K | 3K
    const Plutonium = require('plutonium-js').plutonium;
    const morph = require('plutonium-js').morph;
    ```
-* ####  <a id="Script-Tags">Script Tags</a>
+* #### <a id="Script-Tags"></a>Script Tags
    Add the core Plutonium library and optional plugin scripts directly to a web page. 
    ```javascript
    <script src="lib/min/plutonium.js"></script>
@@ -74,7 +74,7 @@ morph plugin | 6K | 3K
 
 **[:arrow_up_small:](#bookmarks)**	
    
-### <a id="Instantiation">Instantiation</a>
+### <a id="Instantiation"></a>Instantiation
 Instantiate a new Plutonium object with the desired plugins. Each plutonium instance can have any number of animations added to it, and can be controlled as a group (play, pause, etc...).
 ```javascript
 //example 1: module (reference names can be customized using import 'as')
@@ -90,7 +90,7 @@ var myPlutonium = new Plutonium({
 
 **[:arrow_up_small:](#bookmarks)**	
 
-### <a id="Adding-React-State-Properties">Adding React State Properties</a>
+### <a id="Adding-React-State-Properties"></a>Adding React State Properties
 Animation keys can be added to the state properties of any React component.  The easiest way to do this is in the constructor of the component as shown below.
 ```javascript
 constructor (props) {
@@ -134,7 +134,7 @@ render() {
 
 **[:arrow_up_small:](#bookmarks)**	
 
-### <a id="Animating-React-State-Properties">Animating React State Properties</a>
+### <a id="Animating-React-State-Properties"></a>Animating React State Properties
 In your react component constructor add a new animation to the Plutonium object you created earlier. Set the 'id' to match the custom id used to define the animation keys in the state and set 'objects' to this component.
 ```javascript
 var myAnim = myPlutonium.add({
@@ -156,7 +156,7 @@ The animation properties and functionality such as timing, delay, etc..., mimic 
 
 **[:arrow_up_small:](#bookmarks)**	
 
-### <a id="Animating-DOM-Elements">Animating DOM Elements</a>
+### <a id="Animating-DOM-Elements"></a>Animating DOM Elements
 Animating DOM elements is simple and syntactically similar to GreenSock and other popular animation libraries.
 ```javascript
 //example 1: Animate an element ('myElm') over a 2 second duration to the specified value.
@@ -190,7 +190,7 @@ When animating using to() or from() an initial attribute or inline style value s
 
 **[:arrow_up_small:](#bookmarks)**	
 
-### <a id="Morphing-SVG-Paths">Morphing SVG Paths</a>
+### <a id="Morphing-SVG-Paths"></a>Morphing SVG Paths
 Morphing an SVG path is similar to animating any other style or attribute with Plutonium. The only difference is we need to tell Plutonium that the value is a path. To do this we can add the tween property.
 ```javascript
 //example 1: React state animation property (golfer figure to downhill ski figure)
@@ -229,7 +229,7 @@ When applying paths to DOM elements we need to also tell Plutonium to apply the 
 
 **[:arrow_up_small:](#bookmarks)**	
 
-### <a id="API-Control">API Control</a>
+### <a id="API-Control"></a>API Control
 Below are a few quick examples of how to control your animations, see the ['API Reference'](#API-Reference) section below for more details.
 ```javascript
 //example 1: Pause the animation.
@@ -251,8 +251,8 @@ myAnim.changeDirection();
 
 **[:arrow_up_small:](#bookmarks)**	
 
-### <a id="API-Reference">API Reference</a>
-* **<a id="to-from">to(), from():</a>** Animate DOM element styles to or from the provided values.
+### <a id="API-Reference"></a>API Reference
+* **<a id="to-from"></a>to(), from():** Animate DOM element styles to or from the provided values.
    ```javascript
    //example 1
    var myAnim = myPlutonium.to(myElm, 2, {transform:'rotate(360deg)'});
@@ -283,7 +283,7 @@ myAnim.changeDirection();
 
 **[:arrow_up_small:](#bookmarks)**	
 
-* **<a id="keys">keys():</a>** Animate DOM element styles using the provided keys.
+* **<a id="keys"></a>keys():** Animate DOM element styles using the provided keys.
    ```javascript
    //example 1
    var myAnim = myPlutonium.keys(myElm, 2, {
@@ -309,7 +309,7 @@ myAnim.changeDirection();
 
 **[:arrow_up_small:](#bookmarks)**	
 
-* **<a id="add">add():</a>** Add an animation. This is typically only used with React.
+* **<a id="add"></a>add():** Add an animation. This is typically only used with React.
    ```javascript
    //example 1 - React component: Animation keys are defined in the state property of the component.
    var myAnim = myPlutonium.add({
@@ -352,14 +352,14 @@ myAnim.changeDirection();
 
 **[:arrow_up_small:](#bookmarks)**
 
-* **<a id="remove">remove():</a>** Remove an animation by id.
+* **<a id="remove"></a>remove():** Remove an animation by id.
    ```javascript
    myPlutonium.remove(myAnim.id);
    ```
 
 **[:arrow_up_small:](#bookmarks)**
 
-* **<a id="play-pause">play(), pause(), stop(), reset(), changeDirection():</a>** Control all added animations or an individual animation.
+* **<a id="play-pause"></a>play(), pause(), stop(), reset(), changeDirection():** Control all added animations or an individual animation.
    ```javascript
    //example 1
    myPlutonium.play();
@@ -379,14 +379,14 @@ myAnim.changeDirection();
 
 **[:arrow_up_small:](#bookmarks)**	   
 
-* **<a id="seek">seek():</a>** Seek a position for all animations or an individual animation. Provide a position in the range of 0% to 100%.
+* **<a id="seek"></a>seek():** Seek a position for all animations or an individual animation. Provide a position in the range of 0% to 100%.
    ```javascript
    myPlutonium.seek(50);
    ```
 
 **[:arrow_up_small:](#bookmarks)**
    
-* **<a id="setProps">setProps():</a>** Set properties on all added animations or an individual animation. Setting options and functionality mimic CSS animation properties.
+* **<a id="setProps"></a>setProps():** Set properties on all added animations or an individual animation. Setting options and functionality mimic CSS animation properties.
    ```javascript
    myPlutonium.setProps({
        timing:'ease-out',
@@ -400,7 +400,7 @@ myAnim.changeDirection();
    ```
 **[:arrow_up_small:](#bookmarks)**
    
-* **<a id="animation-properties">animation properties:</a>** The following are valid animation properties and values.
+* **<a id="animation-properties"></a>animation properties:** The following are valid animation properties and values.
    * **duration:** [use a number for milliseconds, or a string with units. for example '1s' or '1000ms']
    * **timing:** ['linear', 'ease', 'quadratic', 'cubic', 'quartic', 'quintic', 'sinusoidal', 'exponential', 'circular', 'elastic', 'back', 'bounce' *(optionally specify timing direction by appending '-in', '-out', or '-inout' to the name)*]
    * **delay:** [use a number for milliseconds, or a string with units. for example '1s' or '1000ms']
@@ -411,7 +411,7 @@ myAnim.changeDirection();
  
 **[:arrow_up_small:](#bookmarks)**  
 
-* **<a id="addListener">addListener():</a>** Listen for animation instance events.
+* **<a id="addListener"></a>addListener():** Listen for animation instance events.
    * **'frameChange':** triggered when a frame is rendered
    * **'end':** triggered when the animation ends
    * **'iterate':** triggered when the animation iterates / loops
@@ -438,21 +438,21 @@ myAnim.changeDirection();
  
 **[:arrow_up_small:](#bookmarks)**
  
-* **<a id="removeListener">removeListener():</a>** Remove an event listener from an animation instance.
+* **<a id="removeListener"></a>removeListener():** Remove an event listener from an animation instance.
    ```javascript
    myAnim.removeListener("frameChange");
    ```
 
 **[:arrow_up_small:](#bookmarks)**
 
-* **<a id="event-properties">event properties:</a>** The following are event properties passed to the listener function.
+* **<a id="event-properties"></a>event properties:** The following are event properties passed to the listener function.
    * **type:** the event type name, for example 'frameChange', 'end', etc...
    * **target:** the object that fired the event, for example an animation instance
    * **frame:** if applicable the event will include a frame object with additional animation properties
 
 **[:arrow_up_small:](#bookmarks)**
    
-* **<a id="frame-properties">frame properties:</a>** The following are frame properties which are added to the event object for most animation events.
+* **<a id="frame-properties"></a>frame properties:** The following are frame properties which are added to the event object for most animation events.
    * animation: the animation instance that the frame belongs to
    * data: additional data about the frame
       * **pos:** the position of the frame between 0% and 100%
@@ -468,7 +468,7 @@ myAnim.changeDirection();
 **[:arrow_up_small:](#bookmarks)**		 
 
 		 
-### <a id="License">License</a>
+### <a id="License"></a>License
 
 Released under the [MIT license](LICENSE.md)
 
