@@ -61,16 +61,16 @@ morph plugin | 6K | 3K
    
    Add the core animator library and optional plugin scripts directly to a web page. 
    ```javascript
-   <script src="lib/min/animator.js"></script>
-   <script src="lib/min/morph.js"></script>
+   &lt;script src="lib/min/animator.js"&gt;&lt;/script&gt;
+   &lt;script src="lib/min/morph.js"&gt;&lt;/script&gt;
    ```
 
 * <a id="CDN-Script-Tags"></a>**CDN Script Tags**
    
    Add the core animator library and optional plugin scripts directly to a web page. 
    ```javascript
-   <script src="https://cdn.jsdelivr.net/npm/react-state-animator@1.0.4/lib/min/animator.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/react-state-animator@1.0.4/lib/min/morph.min.js"></script>
+   &lt;script src="https://cdn.jsdelivr.net/npm/react-state-animator@1/lib/min/animator.min.js"&gt;&lt;/script&gt;
+   &lt;script src="https://cdn.jsdelivr.net/npm/react-state-animator@1/lib/min/morph.min.js"&gt;&lt;/script&gt;
    ```
 
 **[:arrow_up_small:](#bookmarks)**	
