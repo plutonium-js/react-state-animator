@@ -14,9 +14,12 @@ plutonium | 14K | 5K
 morph plugin | 6K | 3K
 **total** | **20K** | **8K**
 
-### Complete Documentation and API
 
-[Documentation](https://plutonium.dev/wp/?page_id=285)
+### Links
+
+* [Animator Home](https://plutonium.dev/wp/?page_id=285)
+   * [Documentation](https://plutonium.dev/wp/?page_id=548)
+   * [API](https://plutonium.dev/wp/?page_id=554)
 
 
 ### Bookmarks
