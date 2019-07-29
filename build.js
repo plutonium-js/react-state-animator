@@ -4,7 +4,7 @@ const pkg = require('./package');
 const date = new Date();
 
 const banner = `/*
- * Plutonium-js v${pkg.version}
+ * Plutonium React-State-Animator v${pkg.version}
  * (c) ${date.getFullYear()} Jesse Dalessio
  * Released under the MIT license
 */`;
@@ -12,8 +12,8 @@ const banner = `/*
 //src file data
 const fData = [
 	{
-		src:"src/plutonium.js",
-		name:"plutonium"
+		src:"src/animator.js",
+		name:"animator"
 	},
 	{
 		src:"src/morph.js",
@@ -23,10 +23,10 @@ const fData = [
 
 //get the code and write the files
 _get_all_code((code)=>{
-	fs.writeFile('lib/plutonium.esm.js', `${banner}\n${code.esm}`, 'utf8', err => {
+	fs.writeFile('lib/animator.esm.js', `${banner}\n${code.esm}`, 'utf8', err => {
 		if (err) return console.error(err);
 		else {
-			fs.writeFile('lib/plutonium.js', `${banner}\n${code.com}`, 'utf8', err => {
+			fs.writeFile('lib/animator.js', `${banner}\n${code.com}`, 'utf8', err => {
 				if (err) return console.error(err);
 				else {
 					console.info('build success!');
@@ -54,7 +54,7 @@ function _get_all_code(callback) {
 				code.com += content.replace(/export default/, `exports.${fItem.name} =`);
 				code.esm += index>0?content.replace(/export default/, `export var ${fItem.name} =`):content;
 				//write the individual minified file to the ./lib/min folder
-				content = content.replace(/export default/,index>0?"Plutonium.prototype."+fItem.name+" =":"Plutonium =");
+				content = content.replace(/export default/,index>0?"PU_Animator.prototype."+fItem.name+" =":"PU_Animator =");
 				let minResult = minify(content);
 				if (minResult.error) return console.error(minResult.error);
 				fs.writeFile('lib/min/'+fItem.name+'.js', `${banner}\n${minResult.code}`, 'utf8', err => {

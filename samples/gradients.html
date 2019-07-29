@@ -1,0 +1,97 @@
+<!DOCTYPE html><html><head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sample - Gradients</title>
+	
+	<!-- page CSS -->
+	<style>
+		.flexContainer {display:flex;position:absolute;height:200px;width:600px;margin:auto;top:0;bottom:0;left:0;right:0;}
+		.flexItem {flex:1;margin:10px;border:solid 4px #666;border-radius:10px;}
+		.flexItem:hover, .flexItem.active {border-color:#000;}
+		.hint {position:absolute;top:10px;left:10px;font-size:14px;font-family:Arial, Helvetica, Sans-Serif;color:#444;border:solid 1px #333;background-color:#ddd;border-radius:5px;padding:10px;}
+	</style>
+
+	<!-- React State Animator Script -->
+	<script src="../lib/min/animator.js"></script>
+		
+	<!-- Sample Script -->
+	<script>
+		document.addEventListener("DOMContentLoaded", e => {
+			//create an animator instance
+			const animator = new PU_Animator({
+				morph:true
+			});
+			//create an array of gradient animations data
+			let items = [
+				{
+					duration:1,
+					timing:'ease',
+					iterationCount:1,
+					vals:{
+						backgroundImage:{
+							keys:{
+								from:'radial-gradient(150% 20% at 50% 100%,rgb(255,204,0) 0%,rgb(255,204,0) 45.75%,rgb(255,239,176) 46.67%,rgb(255,240,179) 100%)',
+								to:'radial-gradient(200% 200% at 50% 100%,rgb(255,226,111) 0%,rgb(255,204,0) 45.75%,rgb(255,220,82) 46.67%,rgb(255,240,179) 100%)'
+							}
+						}
+					}
+				},{
+					duration:2,
+					vals:{
+						backgroundImage:{
+							keys:{
+								from:'repeating-radial-gradient(closest-side at 50% 50%,rgb(140,255,54) 0%,rgb(0,0,0) 24%,rgb(255,255,255) 25%,rgb(0,0,0) 48%,rgb(140,255,54) 50%)',
+								to:'repeating-radial-gradient(closest-side at 50% 50%,rgb(140,255,54) 50%,rgb(0,0,0) 74%,rgb(255,255,255) 75%,rgb(0,0,0) 99%,rgb(140,255,54) 100%)'
+							}
+						}
+					}
+					   
+				},{
+					duration:2,
+					iterationCount:1,
+					vals:{
+						backgroundImage:{
+							keys:{
+								from:'radial-gradient(0% 0% at 50% 50%,rgb(84,143,183) 49%,rgb(255,255,255) 50%,rgb(84,143,183) 51%)',
+								to:'radial-gradient(300% 300% at 50% 50%,rgb(84,143,183) 25%,rgb(255,255,255) 50%,rgb(84,143,183) 75%)'
+							}
+						}
+					}
+				}
+			];
+			let elms = document.querySelectorAll('.flexItem');
+			items.forEach((item,i) => {
+				//add the animation
+				let animation = animator.add(elms[i], item.duration, item.vals, {
+					timing:item.timing||'linear',
+					delay:'0s',
+					direction:'normal',
+					iterationCount:item.iterationCount||'infinite',
+					fillMode:'both',
+					playState:'stopped'
+				});
+				//listen for click and toggle play / pause
+				elms[i].addEventListener("click",e => {
+					animation.toggle();
+				});
+				//listen for end or play and set the active class
+				animation.addListener(["play","pause","end"],e => {
+					animation.objects[0].classList[e.type==="play"?'add':'remove']('active');
+				});
+			});
+		});
+	</script>
+
+</head>
+<body style="background-color:#d9e2eb;">
+	<div class="flexContainer">
+		<div class="flexItem" style="background-image:radial-gradient(150% 20% at 50% 100%,rgb(255,204,0) 0%,rgb(255,204,0) 45.75%,rgb(255,239,176) 46.67%,rgb(255,240,179) 100%);"></div>
+		<div class="flexItem" style="background-image:repeating-radial-gradient(closest-side at 50% 50%,rgb(140,255,54) 0%,rgb(0,0,0) 24%,rgb(255,255,255) 25%,rgb(0,0,0) 48%,rgb(140,255,54) 50%);"></div>
+		<div class="flexItem" style="background-image:radial-gradient(0% 0% at 50% 50%,rgb(84,143,183) 49%,rgb(255,255,255) 50%,rgb(84,143,183) 51%)"></div>
+	</div>
+	<div class="hint">
+		Click a gradient to start and stop the animation.
+	</div>
+</body>
+</html>

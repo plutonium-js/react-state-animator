@@ -4,61 +4,51 @@ export default function(plugins) {
 	let t = this;
 	t.animations = {};
 	
-	//initialize plutonium (called at the end)
+	//initialize animator (called at the end)
 	function _init(){
-		for (let i in plugins) t[i] = new (t[i]||plugins[i])(t);
+		for (let i in plugins) {
+			let plugin = t[i]||plugins[i]; 
+			if (plugin&&plugin!==true) t[i] = new plugin(t);
+		}
 		document.addEventListener("visibilitychange", _handle_visibility_change);
 	}
-		
-	//animate to the provided values
-	t.to = function(objects, duration, vals, props) {
-		return _add('to', objects, duration, vals, props);
-	}
-		
-	//animate from the provided values
-	t.from = function(objects, duration, vals, props) {
-		return _add('from', objects, duration, vals, props);
-	}
 	
-	//animate the provided vals (each val should be an object containing keys)
-	t.keys = function(objects, duration, vals, props) {
-		return _add('keys', objects, duration, vals, props);
-	}
-	
-	//add the to, from, or keys animation
-	function _add(type, objects, duration, vals, props) {
-		if (/to|from/.test(type)) {
-			for (let i in vals) {
-				let val = {keys:{}};
-				val.keys[type] = vals[i].hasOwnProperty('val')?vals[i].val:vals[i];
-				val.tween = vals[i].tween;
-				vals[i] = val;
-			}
-		}
+	//add an animation
+	t.add = function(objects, duration, vals, props) {
 		props = props||{};
 		if (!isNaN(duration)) duration = duration*1000;
 		props.duration = duration||props.duration;
-		return t.add({
+		//if vals is a string id this is a React animation (the id points to the state property which holds the vals)
+		let id; if (typeof vals=="string") {
+			id = vals;
+			vals = null;
+		}
+		//convert shortcut single values to key objects
+		for (let i in vals) {
+			var val = vals[i]||''; if (!val.keys) {
+				vals[i] = {
+					keys:{
+						to:val.hasOwnProperty('val')?val.val:val
+					},
+					tween:val.tween
+				};
+			}	
+		}
+		//create the animation object (note: if an animation with the same id already exists it will be replaced)
+		id = id||'PU'+Object.keys(t.animations).length+1;
+		let anim = t.animations[id] = new _animation(t, {
+			id:id,
 			objects:objects,
 			props:props,
 			vals:vals
 		});
-	}
-		
-	//add an animation
-	t.add = function(p) {
-		//get or create the animation object
-		let id = p.id||'PU'+Object.keys(t.animations).length+1;
-		let anim = t.animations[id]; if (!anim) {
-			anim = t.animations[id] = new _animation(t, p);
-			t.event.addListener(anim,"frameChange",_g_a,t);
-		}
+		t.event.addListener(anim,"frameChange", _g_a, t);
 		return anim;
-		
-		//this function is not inline to help reduce garbage collection
-		function _g_a(e) {
-			e.target.frames.tween(e);
-		}
+	}
+	
+	//this function is not inline to help reduce garbage collection
+	function _g_a(e) {
+		e.target.frames.tween(e);
 	}
 	
 	//remove an animation
@@ -69,6 +59,7 @@ export default function(plugins) {
 	//play, pause, stop all animations
 	t.play = function(p) {_action('play', p)}
 	t.pause = function(p) {_action('pause', p)}
+	t.toggle = function(p) {_action('toggle', p)}
 	t.stop = function(p) {_action('stop', p)}
 	t.reset = function(p) {_action('reset', p)}
 	t.seek = function(p) {_action('seek', p)}
@@ -91,21 +82,21 @@ export default function(plugins) {
 	}
 	
 	//animation object
-	function _animation(plutonium, p) {
+	function _animation(animator, p) {
 
 		p = p||{};
-		var t = this;
+		let t = this;
 		t.params = p;
-		t.plutonium = plutonium;
+		t.animator = animator;
 		t.id = p.id;
 		t.props = {};
 		t.timers = {};
 		t.isAnimated = false;
-		var mapStates;
-		var requestFrameId;
 		t.direction = 'forwards';
 		t.dTrack = {};
 		t.sync = p.sync;
+		let mapStates;
+		let requestFrameId;
 		
 		//init after object creation (called at the end of this object)
 		t.init = function() {
@@ -116,18 +107,18 @@ export default function(plugins) {
 				stopped:t.stop
 			}
 			t.frames = new _frames(t);
-			t.objects = plutonium.util.addToNewArray(p.objects);
+			t.objects = animator.util.addToNewArray(p.objects);
 			t.setProps(p.props);
 		}
 
 		//add event listener API shortcut
 		t.addListener = function(name, func, requestingObj) {
-			plutonium.event.addListener(t, name, func, requestingObj);
+			animator.event.addListener(t, name, func, requestingObj);
 		}
 		
 		//remove event listener API shortcut
 		t.removeListener = function(name, func, requestingObj) {
-			plutonium.event.removeListener(t, name, requestingObj);
+			animator.event.removeListener(t, name, requestingObj);
 		}
 		
 		//set prop - duration
@@ -224,7 +215,7 @@ export default function(plugins) {
 		t.seek = function(pos) {
 			pos = (pos<0?0:pos>100?100:pos)/100;
 			t.frames.moveToTime(t.props.duration*pos);
-			plutonium.event.fire(t, "frameChange", {
+			animator.event.fire(t, "frameChange", {
 				frame:t.frames.getFrame(null, true)
 			});
 		}
@@ -234,7 +225,7 @@ export default function(plugins) {
 			t.stop({skipFire:1});
 			t.s_direction(t.props.direction);
 			t.play(p);
-			plutonium.event.fire(t, "reset", {});
+			animator.event.fire(t, "reset", {});
 		}
 
 		//play the animation
@@ -259,7 +250,7 @@ export default function(plugins) {
 					_run(t.sync||p.sync);
 					delete t.sync;
 				}
-				plutonium.event.fire(t, "play", {});
+				animator.event.fire(t, "play", {});
 			}
 		}
 		
@@ -286,34 +277,44 @@ export default function(plugins) {
 				frame = t.lFrame = t.frames.getFrame(timestamp);
 				let status = frame.data.status;
 				if (status.isLast) recurse=0;
+				let skip; if (status.iteration) {
+					animator.event.fire(t, "iterate", {
+						frame:frame
+					});
+					skip = !t.isAnimated;
+				}
 				//fire events
-				plutonium.event.fire(t, "frameChange", {
-					frame:frame
-				});
-				if (status.iteration) {
-					plutonium.event.fire(t, "iterate", {
+				if (!skip) {
+					animator.event.fire(t, "frameChange", {
 						frame:frame
 					});
 				}
 			}
-			if (recurse) {
-				requestFrameId = requestAnimationFrame(_run);
-			}
-			else {
-				t.ended = 1;
-				t.stop();
-				plutonium.event.fire(t, "end", {
-					frame:frame
-				});
+			if (t.isAnimated) {
+				if (recurse) {
+					requestFrameId = requestAnimationFrame(_run);
+				}
+				else {
+					t.ended = 1;
+					t.stop();
+					animator.event.fire(t, "end", {
+						frame:frame
+					});
+				}
 			}
 		}
-
+		
 		//pause the animation
 		t.pause = function(p) {
 			if (t.isAnimated) {
 				_pause_or_stop("pause", p);
 				t.paused = 1;
 			}
+		}
+	
+		//toggle play and pause
+		t.toggle = function(p) {
+			t.isAnimated?_pause_or_stop('pause',p):t.play(p);
 		}
 
 		//stop the animation
@@ -341,7 +342,7 @@ export default function(plugins) {
 			}
 			t.isAnimated = false;
 			//fire animation pause or stop event
-			if (!p.skipFire) plutonium.event.fire(t, type, {});
+			if (!p.skipFire) animator.event.fire(t, type, {});
 		}
 		
 		//change the play direction
@@ -402,12 +403,12 @@ export default function(plugins) {
 
 		let t = this;
 		t.animation = animation;
-		let plutonium = animation.plutonium;
-		t.timestamp=0;										//the current time stamp (set on request animation frame from the animations run function)
-		t.startTime=0;										//the animation start time (in timestamp time)
-		t.time=0;											//the animation time (this is from 0 to the length of time into the duration)
-		t.reverseTime = null;								//the time at which the animation direction was switched into reverse (in timestamp time)
-		t.opposite=0;										//if true animate opposite to the set direction (e.g. if 'forward' animate in 'reverse')
+		let animator = animation.animator;
+		t.timestamp=0;
+		t.startTime=0;
+		t.time=0;
+		t.reverseTime = null;
+		t.opposite=0;
 		t.reverse = false;
 		t.paused = false;
 		t.stopped = true;
@@ -540,8 +541,8 @@ export default function(plugins) {
 				//if on the last loop frame continue
 				if ((atStart&&_is_reverse())||(atEnd&&!_is_reverse())) {
 					if (t.loop.canAdvance()) {
+						status.iteration = t.loop.cur;
 						t.loop.advance();
-						status.iteration = t.loop.cur-1;
 						t.play();
 						//adjust the time (NOTE!!!: This was tricky, don't mess with it.)
 						let adj = Math.abs(time-(atEnd?duration:0)); _is_reverse()?t.startTime+=adj:t.startTime-=adj;
@@ -586,7 +587,7 @@ export default function(plugins) {
 					let startVal = vals.start;
 					let endVal=vals.end;
 					//get or init the object data tween object (this is save data for this specific tween)
-					if (isFirst) objData.tweens[animation.id][j] = {initVals:plutonium.util.cloneObj(valsData)};
+					if (isFirst) objData.tweens[animation.id][j] = {initVals:animator.util.cloneObj(valsData)};
 					let objTween = objData.tweens[animation.id][j];
 					let zoneChange = objTween.lastZone!==keyData.zone;
 					//if the zone has changed or the start and end vals differ continue
@@ -596,14 +597,14 @@ export default function(plugins) {
 						if (!tweenData.disabled) {
 							//if both vals are numbers continue
 							if (!isNaN(startVal) && !isNaN(endVal)) {
-								tweenVal = plutonium.tween({
+								tweenVal = animator.tween({
 									startVal:startVal,
 									endVal:endVal,
 									timing:frameData.timing,
 									time:keyData.time,
 									duration:keyData.duration
 								});
-								tweenVal = plutonium.util.round(tweenVal, 6);
+								tweenVal = animator.util.round(tweenVal, 6);
 								tweenVal = tweenData.modify?tweenData.modify(tweenVal):tweenVal; 
 							}
 							else {
@@ -611,7 +612,7 @@ export default function(plugins) {
 									if (startVal!==endVal && startVal && endVal) {
 										if (zoneChange) {
 											//create a morph interpolation from the start and end path data
-											const morph = plutonium.morph; 
+											const morph = animator.morph; 
 											objTween.ipol = morph.interpolate([
 												morph.parsePath(startVal),
 												morph.parsePath(endVal)
@@ -634,14 +635,14 @@ export default function(plugins) {
 										let tweenVals = new Array(pSmallerLen); 
 										for (let k=0;k<pSmallerLen;k++) {
 											//get the tween val
-											tweenVals[k] = plutonium.tween({
+											tweenVals[k] = animator.tween({
 												startVal:parseFloat(pStart[k]),
 												endVal:parseFloat(pEnd[k]),
 												timing:frameData.timing,
 												time:keyData.time,
 												duration:keyData.duration
 											});
-											tweenVals[k] = plutonium.util.round(tweenVals[k], 6);
+											tweenVals[k] = animator.util.round(tweenVals[k], 6);
 										}
 										//replace the start val string vals with the tweened vals
 										let index=0; tweenVal = startVal.replace(regex_1,(match)=>{
@@ -670,7 +671,7 @@ export default function(plugins) {
 			}
 		}
 		
-		//get or initialize plutonium data on the object (objects are react components, or dom elements)
+		//get or initialize animator data on the object (objects are react components, or dom elements)
 		function _get_object_data(obj, isFirst) {
 			let data = obj.PU_data; if (!data) {
 				data = obj.PU_data = {
@@ -712,8 +713,7 @@ export default function(plugins) {
 			let rVals = rData.vals = {};
 			let pos = frameData.pos;
 			let startPos=0, endPos=0;
-			let isLast = frameData.status.isLast;
-			//loop key names
+			//let isLast = frameData.status.isLast;
 			let keyNames = Object.keys(keys); for (let i=0;i<keyNames.length;i++) {
 				let key = keys[keyNames[i]];
 				rData.zone = i+1;
@@ -729,7 +729,6 @@ export default function(plugins) {
 						endPos = nextKeyPos||keyPos||0; rVals.end = eKey;
 						if (!nextKeyName) {
 							//we only get here when we are after the last key
-							if (!isLast) rVals.end = valData.iVal;
 							rData.aKeys = 1;
 							endPos=100;
 						}
@@ -738,7 +737,7 @@ export default function(plugins) {
 				}
 				else {
 					//we only get here when we are before the first key
-					if (!isLast) rVals.start = valData.iVal;
+					rVals.start = valData.iVal;
 					rVals.end = key;
 					rData.bKeys = 1;
 					endPos = keyPos;
@@ -746,6 +745,7 @@ export default function(plugins) {
 					break;
 				}
 			}
+			//console.log(frameData.status.isLast+"  "+t.fillModeMatches())
 			if (frameData.status.isLast&&!t.fillModeMatches()) {
 				rVals.start = rVals.end = valData.iVal;
 			}
@@ -765,7 +765,7 @@ export default function(plugins) {
 		//loop object (manages looping / iteration counts)
 		function _loop(frames) {
 
-			var t = this;
+			let t = this;
 			t.isInfinite = false;
 			t.alternate = false;
 			t.max = 1;
@@ -798,21 +798,21 @@ export default function(plugins) {
 	
 	//custom event handling
 	//eslint-disable-next-line
-	t.event = new _event(t); function _event(plutonium) {
+	t.event = new _event(t); function _event(animator) {
 		
-		var t = this;
+		let t = this;
 		
 		//add a custom event listener (fn=function to execute, reqestingObj: can be true or the object requesting the event, allows a single event name to be used multiple times on a single object, or once per reqestingObj)
 		t.addListener=function(srcObjs, evtNames, fn, requestingObj) {
 			if (srcObjs) {	
-				let addToNewArray = plutonium.util.addToNewArray;
+				let addToNewArray = animator.util.addToNewArray;
 				evtNames = addToNewArray(evtNames);
 				srcObjs = addToNewArray(srcObjs);
 				for (let i=0;i<srcObjs.length;i++) {
 					for (let j=0;j<evtNames.length;j++) {
 						let srcObj = srcObjs[i];
 						//get or create a new event store object (the event store is added to the src object and is responsible for firing events)
-						let eventStore = srcObj.Plutonium_eventStore||(srcObj.Plutonium_eventStore=new _event_store(plutonium, srcObj));
+						let eventStore = srcObj.PU_eventStore||(srcObj.PU_eventStore=new _event_store(animator, srcObj));
 						eventStore.addEvent(evtNames[j], fn, requestingObj);
 					}
 				}
@@ -821,21 +821,21 @@ export default function(plugins) {
 		
 		//remove a custom event listener
 		t.removeListener=function(src, evtName, requestingObj) {
-			let es = src.Plutonium_eventStore; if (es) {
+			let es = src.PU_eventStore; if (es) {
 				if (evtName) {
 					//remove the specific event or specific event with the matching requesting object
 					es.removeEvent(evtName, requestingObj);
 				}
 				else {
 					//remove the entire event store
-					delete src.Plutonium_eventStore;
+					delete src.PU_eventStore;
 				}
 			}
 		}
 			
 		//fire a custom event (src=object, evt=event name to fire, args=object of custom properties to include in the returned event object)
 		t.fire=function(srcObj, evtName, args) {
-			let eventStore = srcObj.Plutonium_eventStore; if (eventStore) {
+			let eventStore = srcObj.PU_eventStore; if (eventStore) {
 				if (args) {
 					if (!args.isArray) args=[args];
 					else if (typeof args[0]!="object") args[0]={};
@@ -847,10 +847,10 @@ export default function(plugins) {
 			}
 		}
 		
-		//event store object (note: the event store gets attached to the target object as an eventStore property 'Plutonium_eventStore'. the event store is called upon to fire events for the src object it is attached to.)
-		function _event_store (plutonium, src) {
+		//event store object (note: the event store gets attached to the target object as an eventStore property 'PU_eventStore'. the event store is called upon to fire events for the src object it is attached to.)
+		function _event_store (animator, src) {
 		
-			var t = this;
+			let t = this;
 			var events={};
 			
 			//add event
@@ -895,7 +895,7 @@ export default function(plugins) {
 			
 			//fire event
 			t.fire=function(name, args) {
-				args = plutonium.util.addToNewArray(args);
+				args = animator.util.addToNewArray(args);
 				let eventFns = events[name]||[]; for (let i=0; i<eventFns.length; i++) {
 					let fn = eventFns[i].fn; if (fn) {
 						fn.apply(src, args);
@@ -920,7 +920,7 @@ export default function(plugins) {
 
 	//easing / timing functions
 	//eslint-disable-next-line
-	t.timing = new _timing(t); function _timing(plutonium) {
+	t.timing = new _timing(t); function _timing(animator) {
 
 		let t = this;
 	
@@ -945,7 +945,7 @@ export default function(plugins) {
 				return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
 			},
 			back: function(t,b,c,d,s){if (s === undefined) s = 1.70158;return c*(t/=d)*t*((s+1)*t - s) + b;},
-			bounce: function(t,b,c,d){return c - plutonium.timing._out.bounce (d-t, 0, c, d) + b;}
+			bounce: function(t,b,c,d){return c - animator.timing._out.bounce (d-t, 0, c, d) + b;}
 		};
 		//out type functions
 		t._out = {
@@ -997,24 +997,24 @@ export default function(plugins) {
 				return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
 			},
 			bounce: function(t,b,c,d){
-				if (t < d/2) return plutonium.timing._in.bounce (t*2, 0, c, d) * .5 + b;
-				return plutonium.timing._out.bounce (t*2-d, 0, c, d) * .5 + c*.5 + b;
+				if (t < d/2) return animator.timing._in.bounce (t*2, 0, c, d) * .5 + b;
+				return animator.timing._out.bounce (t*2-d, 0, c, d) * .5 + c*.5 + b;
 			}
 		};
 	}
 	
 	//utility functions
 	//eslint-disable-next-line
-	t.util = new _util(t); function _util(plutonium) {
+	t.util = new _util(t); function _util(animator) {
 		
-		var t = this;
+		let t = this;
 		t.uids = {};
 		
 		//error log
 		//eslint-disable-next-line
 		t.errorLog = new _error_log(t); function _error_log(util) {
 			
-			var t = this;
+			let t = this;
 			t.items = [];
 			
 			//log an error
@@ -1022,10 +1022,10 @@ export default function(plugins) {
 				let items = t.items;
 				items.unshift(data);
 				if (items.length>100) items.length=100;
-				plutonium.event.fire(t, 'error', {
+				animator.event.fire(t, 'error', {
 					data:data
 				});
-				if (window.console) console.log('Plutonium Error: '+(data.msg||data.error));
+				if (window.console) console.log('animator Error: '+(data.msg||data.error));
 			}
 		}
 		

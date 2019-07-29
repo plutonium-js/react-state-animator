@@ -1,16 +1,17 @@
 {
 	"name": "react-state-animator",
-	"version": "1.0.0",
-	"description": "Plutonium is an ultra lightweight full featured animation library built specifically for React and vanilla JavaScript. Tween any React component state properties or DOM styles and attributes. An advanced normalizing SVG morphing plugin for paths is included!",
-	"main": "lib/plutonium.js",
-	"module": "lib/plutonium.esm.js",
-	"unpkg": "lib/plutonium.min.js",
-	"jsnext:main": "lib/plutonium.esm.js",
+	"version": "1.0.3",
+	"description": "Ultra lightweight full featured animation library built specifically for React and vanilla JavaScript. Tween any React component state properties or DOM styles and attributes. An advanced normalizing SVG morphing plugin for paths is included!",
+	"main": "lib/animator.js",
+	"module": "lib/animator.esm.js",
+	"unpkg": "lib/animator.min.js",
+	"jsnext:main": "lib/animator.esm.js",
 	"scripts": {
 		"build": "node build"
 	},
 	"keywords": [
 		"plutonium",
+		"animator",
 		"animation",
 		"animate",
 		"transition",
@@ -18,12 +19,12 @@
 		"react",
 		"reactJS",
 		"svg",
+		"html5",
 		"morph",
 		"morphing",
 		"path morph",
 		"tween",
-		"tweening",
-		"greensock"
+		"tweening"
 	],
 	"author": "Jesse Dalessio",
 	"license": "MIT",

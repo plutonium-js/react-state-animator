@@ -1,11 +1,11 @@
 //polymorph (note: this source code is copyright polymorph and distributed under an MIT license - https://github.com/notoriousb1t/polymorph - this source code has been modified to fix bugs and work with Plutonium - see comments for changes)
 //This code is responsible for morphing SVG paths. The code interpolates and fills in points as needed creating a smooth transition between two or more shapes regardless of differences in point quantity.
-export default function(plutonium) {
+export default function(animator) {
 
 	var _ = undefined;
 	var V = 'V', H = 'H', L = 'L', Z = 'Z', M = 'M', C = 'C', S = 'S', Q = 'Q', T = 'T', A = 'A';
 	var EMPTY = ' ';
-	var util = plutonium.util;
+	var util = animator.util;
 	
 	function isString(obj) {
 		return typeof obj === 'string';
@@ -45,15 +45,13 @@ export default function(plutonium) {
 	var max = math.max;
 	var floor = math.floor;
 	var sqrt = math.sqrt;
-	var pow = math.pow;
 	var cos = math.cos;
 	var asin = math.asin;
 	var sin = math.sin;
 	var tan = math.tan;
 	var PI = math.PI;
 	var quadraticRatio = 2.0 / 3;
-	var EPSILON = pow(2, -52);
-
+	
 	function fillObject(dest, src) {
 		for (var key in src) {
 			if (!dest.hasOwnProperty(key)) {
@@ -105,7 +103,7 @@ export default function(plutonium) {
 	}
 	
 	//reverse points direction form clockwise to counter clockwise or vice versa (part of normalization)
-	//NOTE: this is a plutonium added feature
+	//NOTE: this is a Plutonium added feature
 	function _reverse_points_direction(ns) {
 		var reversed = [];
 		//loop the buffer
@@ -240,11 +238,8 @@ export default function(plutonium) {
 			//set the item to the path interpolator function
 			items[h] = getPathInterpolator(paths[h], paths[h + 1], options);
 		}
-		return function (offset) {
-			var d = hlen * offset;
-			var flr = min(floor(d), hlen - 1);
-			//if (items[flr]) 
-			return renderPath(items[flr]((d - flr) / (flr + 1)), formatter);
+		return function (tweenData) {
+			return renderPath(items[0](tweenData), formatter);
 		};
 	}
 	
@@ -256,35 +251,30 @@ export default function(plutonium) {
 	function getPathInterpolator(left, right, options, z) {
 		var matrix = normalizePaths(left, right, options);
 		var n = matrix[0].length;
-		return function (offset) {
-			if (abs(offset - 0) < EPSILON) {
-				return {ns:left.path};
-			}
-			if (abs(offset - 1) < EPSILON) {
-				return {ns:right.path};
-			}
-			//createe a z data array
+		return function (tweenData) {
 			var zData = Array(n);
-			//init the array and loop
 			var ns = Array(n); for (var h = 0; h < n; h++) {
-				//mix the points
-				ns[h] = mixPoints(matrix[0][h], matrix[1][h], offset);
-				//get the z command status for the segment
+				ns[h] = mixPoints(matrix[0][h], matrix[1][h], tweenData);
 				var z = left.data[h]?left.data[h].z:null||right.data[h]?right.data[h].z:null;
-				//add the z command ture or false to the cooresponding z data array item
 				zData[h] = z;
 			}
-			//return ns;
 			return {ns:ns, z:zData}
 		};
 	}
 	
 	//note: a and b are segments
-	function mixPoints(a, b, o) {
+	function mixPoints(a, b, tweenData) {
 		var alen = a.length;
 		var results = createNumberArray(alen);
 		for (var i = 0; i < alen; i++) {
-			results[i] = a[i] + (b[i] - a[i]) * o;
+			let tweenVal = animator.tween({
+				startVal:a[i],
+				endVal:b[i],
+				timing:tweenData.timing,
+				time:tweenData.time,
+				duration:tweenData.duration
+			});
+			results[i] = tweenVal;
 		}
 		return results;
 	}
