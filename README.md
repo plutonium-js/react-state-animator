@@ -93,7 +93,7 @@ var myAnimator = new PU_Animator({
 
 ### <a id="Adding-React-State-Properties"></a>Adding React State Properties
 Animation keys can be added to the state properties of any React component.  The easiest way to do this is in the constructor of the component as shown below.
-```
+```javascript
 constructor (props) {
     super(props);
     this.state = {
@@ -108,7 +108,7 @@ constructor (props) {
 }
 ```
 Optionally specify key positions as follows.
-```
+```javascript
 rotate:{val:0, keys:{
     "pos_0": 0,
     "pos_50": 180
@@ -117,9 +117,9 @@ rotate:{val:0, keys:{
 ```
 
 To apply the animated rotate state property shown above, reference it in your components JSX as you would any other custom state property.
-```
+```react
 render() {
-    return &lt;div
+    return <div
         style={{
             position:'fixed',
             top:'25%',
@@ -130,7 +130,7 @@ render() {
             //reference the 'val' property, this is what will get tweened by the animator
             transform:'rotate('+this.state.myAnimation.rotate.val+')',
         }}
-    &gt;;
+    />;
 }
 ```
 
@@ -141,7 +141,7 @@ In your react component constructor add a new animation to the animator object y
 
 The add method takes 4 arguments (objects, duration, id, props). Set the 'id' to match the custom id used to define the animation keys in the state and set 'objects' to this react component.
 
-```
+```javascript
 var myAnimation = myAnimator.add(this, 2, 'myAnimation', {
     timing:'ease',
     delay:0,
@@ -158,7 +158,7 @@ The animation properties and functionality such as timing, delay, etc..., mimic 
 
 ### <a id="Animating-DOM-Elements"></a>Animating DOM Elements
 Animating DOM elements is similar to animating React components with one difference. Instead of specifying a state property id for the third argument we supply an object of values to animate.
-```
+```javascript
 //example 1: Animate an element ('myElm') over a 2 second duration to the specified value.
 var myAnimation = myAnimator.add(myElm, 2, {transform:'rotate(360deg)'});
 
