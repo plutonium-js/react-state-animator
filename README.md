@@ -117,7 +117,7 @@ rotate:{val:0, keys:{
 ```
 
 To apply the animated rotate state property shown above, reference it in your components JSX as you would any other custom state property.
-```react
+```jsx
 render() {
     return <div
         style={{
