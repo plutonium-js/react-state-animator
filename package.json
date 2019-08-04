@@ -1,6 +1,6 @@
 {
 	"name": "react-state-animator",
-	"version": "1.0.5",
+	"version": "1.0.7",
 	"description": "Ultra lightweight full featured animation library built specifically for React and vanilla JavaScript. Tween any React component state properties or DOM styles and attributes. An advanced normalizing SVG morphing plugin for paths is included!",
 	"main": "lib/animator.js",
 	"module": "lib/animator.esm.js",
@@ -9,6 +9,11 @@
 	"scripts": {
 		"build": "node build"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/plutonium-js/react-state-animator"
+	},
+	"homepage": "https://plutonium.dev/wp/libraries/react-animator/",
 	"keywords": [
 		"plutonium",
 		"animator",

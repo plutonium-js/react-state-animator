@@ -5,7 +5,7 @@ const date = new Date();
 
 const banner = `/*
  * Plutonium React-State-Animator v${pkg.version}
- * (c) ${date.getFullYear()} Jesse Dalessio
+ * (c) ${date.getFullYear()} Jesse Dalessio - https://plutonium.dev
  * Released under the MIT license
 */`;
 

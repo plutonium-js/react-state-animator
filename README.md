@@ -26,7 +26,6 @@ morph plugin | 6K | 3K
 * [Installation](#Installation)
 * [Usage](#Usage)
    * [Module](#Module)
-   * [Local Script Tags](#Local-Script-Tags)
    * [CDN Script Tags](#CDN-Script-Tags)
 * [Instantiation](#Instantiation)
 * [Adding React State Properties](#Adding-React-State-Properties)
@@ -57,14 +56,6 @@ morph plugin | 6K | 3K
    const morph = require('react-state-animator').morph;
    ```
    
-* <a id="Local-Script-Tags"></a>**Local Script Tags**
-   
-   Add the core animator library and optional plugin scripts directly to a web page. 
-   ```html
-   <script src="lib/min/animator.js"></script>
-   <script src="lib/min/morph.js"></script>
-   ```
-
 * <a id="CDN-Script-Tags"></a>**CDN Script Tags**
    
    Add the core animator library and optional plugin scripts directly to a web page. 
@@ -215,6 +206,6 @@ myAnimation.changeDirection();
 
 Released under the [MIT license](LICENSE.md)
 
-Author: Jesse Dalessio
+Author: Jesse Dalessio / [Plutonium.dev](https://plutonium.dev)
 
 **[:arrow_up_small:](#bookmarks)**	

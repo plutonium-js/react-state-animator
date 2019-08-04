@@ -1,4 +1,9 @@
 //Plutonium - [react-state-animator] - Animation Library for React component state properties or DOM styles and attributes.
+/*
+ * Plutonium react-state-animator
+ * (c) 2019 Jesse Dalessio - https://plutonium.dev
+ * Released under the MIT license
+*/
 export default function(plugins) {
 	
 	let t = this;
